@@ -4,9 +4,11 @@ import { useState } from 'react';
 export default function HomeScreen() {
   const [connected, setConnected] = useState(false);
   const [scanning, setScanning] = useState(false);
+  const [lastSeen, setLastSeen] = useState<string | null>(null);
 
   const handleScan = () => {
     if (connected) {
+      setLastSeen(new Date().toLocaleTimeString());
       setConnected(false);
       return;
     }
@@ -31,6 +33,12 @@ export default function HomeScreen() {
           {connected ? 'TrackSafe-001' : 'Searching...'}
         </Text>
       </View>
+
+      {lastSeen && !connected && (
+        <View style={styles.lastSeenBox}>
+          <Text style={styles.lastSeenText}>🕐 Last seen at {lastSeen}</Text>
+        </View>
+      )}
 
       <TouchableOpacity
         style={[styles.button, scanning && styles.buttonDisabled]}
@@ -92,6 +100,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   deviceName: {
+    color: '#888',
+    fontSize: 14,
+  },
+  lastSeenBox: {
+    backgroundColor: '#1a1a1a',
+    padding: 12,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  lastSeenText: {
     color: '#888',
     fontSize: 14,
   },
